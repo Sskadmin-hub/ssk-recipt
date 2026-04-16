@@ -93,7 +93,7 @@ saveData({
   document.getElementById('r-purpose').textContent=cur.purpose;
   document.getElementById('r-month').textContent=cur.month;
   document.getElementById('r-pm').textContent=cur.pm;
-  document.getElementById('r-receiver').textContent=cur.receiver+' [#'+cur.code+']';
+  document.getElementById('r-receiver').textContent=cur.receiver;
   document.getElementById('r-link').textContent=cur.link;
   document.getElementById('r-link2').textContent=cur.link;
 
