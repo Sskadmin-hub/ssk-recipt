@@ -358,6 +358,7 @@ function buildMsg(e,forAdmin){
     '*Period:* '+e.month,
     '*Payment:* '+e.pm,
     '*Received By:* '+e.receiver+' []',
+    
     forAdmin?'_Auto-sent by SSK Receipt System_':'_Thank you! Keep this receipt for your records._'
   ].filter(Boolean).join('\n');
 }
@@ -396,15 +397,5 @@ function reset(){
   window.scrollTo(0,0);
 }
 </script>
-<div class="container">
-  <!-- tumhara form ya content -->
-
-  <button class="ssk-btn" onclick="openHistory()">SSK</button>
-</div>
-<div id="historySection" style="display:none;">
-  <h2>History</h2>
-  <div id="historyBox"></div>
-</div>
-<script src="script.js"></script>
 </body>
 </html>

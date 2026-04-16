@@ -2,7 +2,7 @@ function openHistory() {
   let code = prompt("Enter Admin Code");
 
   if (code === "7890") {
-    document.getElementById("historySection").style.display = "block";
+    document.getElementById("studentName").style.display = "block";
     showHistory();
   } else {
     alert("Wrong Code");
