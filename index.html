@@ -357,7 +357,7 @@ function buildMsg(e,forAdmin){
     '*Purpose:* '+e.purpose,
     '*Period:* '+e.month,
     '*Payment:* '+e.pm,
-    '*Received By:* '+e.receiver+',
+    '*Received By:* '+e.receiver+' [#'+e.code+']',
     forAdmin?'_Auto-sent by SSK Receipt System_':'_Thank you! Keep this receipt for your records._'
   ].filter(Boolean).join('\n');
 }
