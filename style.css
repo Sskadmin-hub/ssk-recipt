@@ -6,3 +6,11 @@
     display: none !important;
    } 
 }
+.rlink-row{
+  display: none !important;  
+}
+@media print {
+   .rlink-row{
+    display: none !important;
+   } 
+}
