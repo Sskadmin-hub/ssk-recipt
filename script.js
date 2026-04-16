@@ -1,4 +1,16 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyB06b5d_a03YC_T8TFiZ1_5uJVE1dyyV9c",
+  authDomain: "ssk-receipt.firebaseapp.com",
+  databaseURL: "https://ssk-receipt-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "ssk-receipt"
+};
 
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+function saveToFirebase(data) {
+  const id = Date.now();
+  db.ref("receipts/" + id).set(data);
+}
 const ADMIN='917077746797';
 const SCHOOL='Saraswata Sikshya Kendra, Dihirakul';
 // Authorised receiver codes — add/change as needed
@@ -80,6 +92,15 @@ saveData({
   class: cur.class,
   amount: cur.amount,
   phone: cur.phone,
+  receiver: cur.receiver,
+  date: cur.date + " " + cur.time
+});
+
+saveToFirebase({
+  name: cur.student,
+  parent: cur.parent,
+  class: cur.class,
+  amount: cur.amount,
   receiver: cur.receiver,
   date: cur.date + " " + cur.time
 });
