@@ -347,22 +347,17 @@ function buildMsg(e,forAdmin){
   return [
     '*'+SCHOOL+'*',
     forAdmin?'*🔔 NEW FEE RECEIPT GENERATED*':'*✅ Fee Receipt — '+SCHOOL+'*',
-    '━━━━━━━━━━━━━━━━━━━━',
     '*Receipt No:* '+e.id,
     '*Date:* '+e.date+' at '+e.time,
-    '*🔗 Receipt Link:* '+e.link,
-    '━━━━━━━━━━━━━━━━━━━━',
     '*Student:* '+e.student,
     '*Parent:* '+e.parent,
     '*Class:* '+e.class,
     forAdmin?'*Parent WhatsApp:* '+e.phone:'',
-    '━━━━━━━━━━━━━━━━━━━━',
     '*Amount Paid:* ₹'+e.amount.toLocaleString('en-IN'),
     '*Purpose:* '+e.purpose,
     '*Period:* '+e.month,
     '*Payment:* '+e.pm,
-    '*Received By:* '+e.receiver+' [#'+e.code+']',
-    '━━━━━━━━━━━━━━━━━━━━',
+    '*Received By:* '+e.receiver+',
     forAdmin?'_Auto-sent by SSK Receipt System_':'_Thank you! Keep this receipt for your records._'
   ].filter(Boolean).join('\n');
 }
