@@ -15,19 +15,18 @@
    } 
 }
 .ssk-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
   width: 60px;
   height: 60px;
   border-radius: 50%;
+
   background: #2563EB;
   color: white;
   border: none;
   font-weight: bold;
-  font-size: 18px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-.ssk-btn {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
+
+  z-index: 9999;   /* सबसे ऊपर लाएगा */
 }
