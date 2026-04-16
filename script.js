@@ -1,19 +1,7 @@
-let history = JSON.parse(localStorage.getItem("history")) || [];
-
-history.push({
-  name: studentName,
-  class: studentClass,
-  amount: amount,
-  date: date,
-  time: time,
-  receiver: receiver
-});
-
-localStorage.setItem("history", JSON.stringify(history));
 function openHistory() {
   let code = prompt("Enter Admin Code");
 
-  if (code === "1234") {
+  if (code === "7890") {
     document.getElementById("historySection").style.display = "block";
     showHistory();
   } else {
@@ -38,3 +26,18 @@ function showHistory() {
 
   document.getElementById("historyBox").innerHTML = output;
 }
+function saveHistory(studentName, studentClass, amount, date, time, receiver) {
+  let history = JSON.parse(localStorage.getItem("history")) || [];
+
+  history.push({
+    name: studentName,
+    class: studentClass,
+    amount: amount,
+    date: date,
+    time: time,
+    receiver: receiver
+  });
+
+  localStorage.setItem("history", JSON.stringify(history));
+}
+saveHistory(studentName, studentClass, amount, date, time, receiver);
