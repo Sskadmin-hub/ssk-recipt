@@ -1,3 +1,8 @@
 .link-box{
-  display:none;  
+  display: none !important;  
+}
+@media print {
+   .link-box{
+    display: none !important;
+   } 
 }
