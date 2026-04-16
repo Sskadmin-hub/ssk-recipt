@@ -93,6 +93,7 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:300px;backgro
 .code-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--gold);font-family:'DM Mono',monospace}
 @media(max-width:480px){.grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr}.rbig .val{font-size:32px}.rhead-top{flex-direction:column;gap:10px}.rhead-info{text-align:center}}
 @media print{body::before{display:none}.top,.actions,.new-btn,.ok-banner,.card,.receiver-section{display:none!important}.receipt{box-shadow:none;border:1px solid #ccc}#rv{display:block!important}#fv{display:none!important}}
+
 </style>
 </head>
 <body>
@@ -243,159 +244,22 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:300px;backgro
   </div>
 </div>
 
-<script>
-const ADMIN='917077746797';
-const SCHOOL='Saraswata Sikshya Kendra, Dihirakul';
-// Authorised receiver codes — add/change as needed
-const VALID_CODES=['5678','SSK01','SSK02','G1','ADMIN'];
-let pm='Cash', cur=null;
 
-document.querySelectorAll('.pm').forEach(el=>el.addEventListener('click',()=>{
-  document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));
-  el.classList.add('on'); pm=el.dataset.pm;
-}));
+<!-- Floating Admin Button -->
+<button id="adminBtn">📄</button>
 
-function genId(){
-  const d=new Date();
-  return 'SSK-'+d.getFullYear().toString().slice(2)+
-    String(d.getMonth()+1).padStart(2,'0')+
-    String(d.getDate()).padStart(2,'0')+'-'+
-    Math.random().toString(36).slice(2,6).toUpperCase();
-}
-
-function genLink(id){
-  // Creates a unique receipt reference link
-  const base=window.location.href.split('?')[0].split('#')[0];
-  const token=btoa(id+':'+Date.now()).replace(/=/g,'').slice(0,16);
-  return base+'?receipt='+id+'&token='+token;
-}
-
-function validate(){
-  const checks=[
-    ['fi-student','student'],['fi-parent','parent'],['fi-class','class'],
-    ['fi-amount','amount'],['fi-purpose','purpose'],
-    ['fi-receiver','receiver'],['fi-code','rcode']
-  ];
-  let ok=true;
-  checks.forEach(([fid,iid])=>{
-    const f=document.getElementById(fid);
-    const v=document.getElementById(iid).value.trim();
-    const bad=!v||(iid==='amount'&&parseFloat(v)<=0);
-    f.classList.toggle('invalid',bad);
-    if(bad)ok=false;
-  });
-
-  // Validate receiver code
-  const code=document.getElementById('rcode').value.trim().toUpperCase();
-  const validSet=VALID_CODES.map(c=>c.toUpperCase());
-  if(!validSet.includes(code)){
-    document.getElementById('fi-code').classList.add('invalid');
-    document.getElementById('fi-code').querySelector('.err').textContent='Invalid code — not authorised';
-    ok=false;
-  }
-  return ok;
-}
-
-function submit(){
-  if(!validate()){
-    document.querySelector('.field.invalid input, .field.invalid select')?.scrollIntoView({behavior:'smooth',block:'center'});
-    return;
-  }
-  const now=new Date();
-  const id=genId();
-  cur={
-    id,
-    link:genLink(id),
-    date:now.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}),
-    time:now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
-    student:document.getElementById('student').value.trim(),
-    parent:document.getElementById('parent').value.trim(),
-    class:document.getElementById('class').value,
-    phone:document.getElementById('phone').value.trim(),
-    amount:parseFloat(document.getElementById('amount').value),
-    purpose:document.getElementById('purpose').value,
-    month:document.getElementById('month').value.trim()||'—',
-    pm,
-    receiver:document.getElementById('receiver').value.trim(),
-    code:document.getElementById('rcode').value.trim().toUpperCase()
-  };
-
-  // Fill receipt
-  document.getElementById('r-id').textContent=cur.id;
-  document.getElementById('r-dt').textContent=cur.date+' · '+cur.time;
-  document.getElementById('r-amt').textContent='₹'+cur.amount.toLocaleString('en-IN');
-  document.getElementById('r-student').textContent=cur.student;
-  document.getElementById('r-parent').textContent=cur.parent;
-  document.getElementById('r-class').textContent=cur.class;
-  document.getElementById('r-purpose').textContent=cur.purpose;
-  document.getElementById('r-month').textContent=cur.month;
-  document.getElementById('r-pm').textContent=cur.pm;
-  document.getElementById('r-receiver').textContent=cur.receiver+' [#'+cur.code+']';
-  document.getElementById('r-link').textContent=cur.link;
-  document.getElementById('r-link2').textContent=cur.link;
-
-  const ph=cur.phone.replace(/\D/g,'');
-  document.getElementById('wa-parent-btn').style.display=ph.length>=10?'block':'none';
-
-  document.getElementById('fv').style.display='none';
-  document.getElementById('rv').style.display='block';
-  window.scrollTo(0,0);
-  setTimeout(()=>autoSendAdmin(),900);
-}
-
-function buildMsg(e,forAdmin){
-  return [
-    '*'+SCHOOL+'*',
-    forAdmin?'*🔔 NEW FEE RECEIPT GENERATED*':'*✅ Fee Receipt — '+SCHOOL+'*',
-    '*Receipt No:* '+e.id,
-    '*Date:* '+e.date+' at '+e.time,
-    '*Student:* '+e.student,
-    '*Parent:* '+e.parent,
-    '*Class:* '+e.class,
-    forAdmin?'*Parent WhatsApp:* '+e.phone:'',
-    '*Amount Paid:* ₹'+e.amount.toLocaleString('en-IN'),
-    '*Purpose:* '+e.purpose,
-    '*Period:* '+e.month,
-    '*Payment:* '+e.pm,
-    '*Received By:* '+e.receiver+' []',
-    
-    forAdmin?'_Auto-sent by SSK Receipt System_':'_Thank you! Keep this receipt for your records._'
-  ].filter(Boolean).join('\n');
-}
-
-function autoSendAdmin(){
-  window.open('https://wa.me/'+ADMIN+'?text='+encodeURIComponent(buildMsg(cur,true)),'_blank');
-}
-
-function sendToAdmin(){
-  window.open('https://wa.me/'+ADMIN+'?text='+encodeURIComponent(buildMsg(cur,true)),'_blank');
-}
-
-function sendToParent(){
-  let ph=cur.phone.replace(/\D/g,'');
-  if(ph.length===10)ph='91'+ph;
-  if(ph.startsWith('0'))ph='91'+ph.slice(1);
-  window.open('https://wa.me/'+ph+'?text='+encodeURIComponent(buildMsg(cur,false)),'_blank');
-}
-
-function copyLink(){
-  navigator.clipboard.writeText(cur.link).then(()=>{
-    const b=document.querySelector('.act.outline:nth-child(2)');
-    b.textContent='✓ Copied!';
-    setTimeout(()=>b.textContent='🔗 Copy Link',2000);
-  });
-}
-
-function reset(){
-  document.getElementById('fv').style.display='block';
-  document.getElementById('rv').style.display='none';
-  document.querySelectorAll('input,select').forEach(el=>el.value='');
-  document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));
-  document.querySelector('[data-pm="Cash"]').classList.add('on');
-  pm='Cash';
-  document.querySelectorAll('.field').forEach(f=>f.classList.remove('invalid'));
-  window.scrollTo(0,0);
-}
-</script>
+<!-- Admin Panel -->
+<div id="adminPanel" style="display:none;">
+  <div class="admin-box">
+    <h3>Admin Panel</h3>
+    <div id="history"></div>
+    <button onclick="printPage()">Print</button>
+    <button onclick="clearData()">Delete All</button>
+    <button onclick="closeAdmin()" style="background:red;color:white;">
+  Exit
+</button>
+  </div>
+</div>
+<script src="script.js"></script>
 </body>
 </html>
