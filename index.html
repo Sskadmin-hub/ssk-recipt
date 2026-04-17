@@ -253,16 +253,15 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:300px;backgro
   <div class="admin-box">
     <h3>Admin Panel</h3>
     <div id="history"></div>
-    <button onclick="printPage()">Print</button>
+    <button onclick="printPage()">PrintBtn</button>
     <button onclick="clearData()">Delete All</button>
     <button onclick="closeAdmin()" style="background:red;color:white;">
   Exit
 </button>
   </div>
 </div>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
-<script src="script.js"></script>
+
+<script type="module" src="script.js"></script>
 </body>
 </html>

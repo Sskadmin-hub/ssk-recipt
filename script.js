@@ -1,16 +1,17 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyB06b5d_a03YC_T8TFiZ1_5uJVE1dyyV9c",
-  authDomain: "ssk-receipt.firebaseapp.com",
-  databaseURL: "https://ssk-receipt-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ssk-receipt"
-};
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyAr9mphtx0jW6D3WqzxCYoV_KSBAc1THR0",
+    authDomain: "ssk-receipt-e8619.firebaseapp.com",
+    projectId: "ssk-receipt-e8619",
+    storageBucket: "ssk-receipt-e8619.firebasestorage.app",
+    messagingSenderId: "399374158279",
+    appId: "1:399374158279:web:2e8ecc768178cbe00331e2"
+  };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-function saveToFirebase(data) {
-  const id = Date.now();
-  db.ref("receipts/" + id).set(data);
-}
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  export const db = getFirestore(app);
 const ADMIN='917077746797';
 const SCHOOL='Saraswata Sikshya Kendra, Dihirakul';
 // Authorised receiver codes — add/change as needed
@@ -21,7 +22,16 @@ document.querySelectorAll('.pm').forEach(el=>el.addEventListener('click',()=>{
   document.querySelectorAll('.pm').forEach(e=>e.classList.remove('on'));
   el.classList.add('on'); pm=el.dataset.pm;
 }));
-
+async function saveToFirebase(receiptData) {
+    try {
+        await addDoc(collection(db, "receipts"), receiptData);
+        console.log("Data Firebase mein save ho gaya!");
+    } catch (e) {
+        console.error("Error saving data: ", e);
+    }
+}
+// Ise window object mein daalein taaki HTML se access ho sake
+window.saveToFirebase = saveToFirebase;
 function genId(){
   const d=new Date();
   return 'SSK-'+d.getFullYear().toString().slice(2)+
@@ -63,7 +73,7 @@ function validate(){
   return ok;
 }
 
-function submit(){
+async function submit(){
   if(!validate()){
     document.querySelector('.field.invalid input, .field.invalid select')?.scrollIntoView({behavior:'smooth',block:'center'});
     return;
@@ -86,6 +96,7 @@ function submit(){
     receiver:document.getElementById('receiver').value.trim(),
     code:document.getElementById('rcode').value.trim().toUpperCase()
   };
+  await saveToFirebase(cur);
 saveData({
   name: cur.student,
   parent: cur.parent,
@@ -96,14 +107,7 @@ saveData({
   date: cur.date + " " + cur.time
 });
 
-saveToFirebase({
-  name: cur.student,
-  parent: cur.parent,
-  class: cur.class,
-  amount: cur.amount,
-  receiver: cur.receiver,
-  date: cur.date + " " + cur.time
-});
+
   // Fill receipt
   document.getElementById('r-id').textContent=cur.id;
   document.getElementById('r-dt').textContent=cur.date+' · '+cur.time;
@@ -184,16 +188,21 @@ function reset(){
 // 🔐 ADMIN CODE (yahi change karna)
 const ADMIN_CODE = "1234";
 
-document.getElementById("adminBtn").onclick = function(){
-  let code = prompt("Enter Admin Code");
+// Pehle check karein ki button exist karta hai ya nahi
+const adminBtn = document.getElementById("adminBtn");
 
-  if(code === ADMIN_CODE){
-    document.getElementById("adminPanel").style.display = "flex";
-    loadHistory();
-  }else{
-    alert("Wrong Code ❌");
-  }
-};
+if (adminBtn) {
+    adminBtn.onclick = function() {
+        let code = prompt("Enter Admin Code");
+
+        if (code === ADMIN_CODE) {
+            document.getElementById("adminPanel").style.display = "flex";
+            loadHistory();
+        } else {
+            alert("Wrong Code ❌");
+        }
+    };
+}
 
 // 📦 Save data function (jab payment ho tab call karo)
 function saveData(data){
@@ -297,15 +306,16 @@ function printAdminLandscape(){
       </body>
     </html>
   `);
+// Ye code aapke main function ke andar aayega
 
-  newwin.document.close();
-
-newwin.onload = function () {
-  newwin.print();
-};
-}
-window.addEventListener("load", function(){
-
-  document.getElementById("printBtn").addEventListener("click", printAdminLandscape);
-
-});
+  }
+window.printPage = printPage;
+window.printAdminLandscape = printAdminLandscape;
+window.clearData = clearData;
+window.closeAdmin = closeAdmin;
+window.submit = submit;
+window.copyLink = copyLink;
+window.sendToAdmin = sendToAdmin;
+window.reset = reset;
+window.sendToParent = sendToParent;
+window.saveToFirebase = saveToFirebase;
