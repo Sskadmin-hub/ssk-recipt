@@ -96,7 +96,7 @@ async function submit(){
     receiver:document.getElementById('receiver').value.trim(),
     code:document.getElementById('rcode').value.trim().toUpperCase()
   };
-  await saveToFirebase(cur);
+   saveToFirebase(cur);
 saveData({
   name: cur.student,
   parent: cur.parent,
