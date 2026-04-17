@@ -15,7 +15,7 @@ import { getFirestore, collection, addDoc } from "https://www.gstatic.com/fireba
 const ADMIN='917077746797';
 const SCHOOL='Saraswata Sikshya Kendra, Dihirakul';
 // Authorised receiver codes — add/change as needed
-const VALID_CODES=['5678','SSK01','SSK02','G1','ADMIN'];
+const VALID_CODES=['JYO12','GAN90','SSK1','G1','ADMIN'];
 let pm='Cash', cur=null;
 
 document.querySelectorAll('.pm').forEach(el=>el.addEventListener('click',()=>{
@@ -186,7 +186,7 @@ function reset(){
 }
 
 // 🔐 ADMIN CODE (yahi change karna)
-const ADMIN_CODE = "1234";
+const ADMIN_CODE = "0987";
 
 // Pehle check karein ki button exist karta hai ya nahi
 const adminBtn = document.getElementById("adminBtn");
