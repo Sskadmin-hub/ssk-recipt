@@ -15,7 +15,7 @@ import { getFirestore, collection, addDoc } from "https://www.gstatic.com/fireba
 const ADMIN='917077746797';
 const SCHOOL='Saraswata Sikshya Kendra, Dihirakul';
 // Authorised receiver codes — add/change as needed
-const VALID_CODES=['JYO12','GAN90','SSK1','G1','ADMIN'];
+const VALID_CODES=['JYO12','G0','SS1','l01','N002'];
 let pm='Cash', cur=null;
 
 document.querySelectorAll('.pm').forEach(el=>el.addEventListener('click',()=>{
